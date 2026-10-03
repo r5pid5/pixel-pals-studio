@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {connect} from './cdp.mjs';
+const c=await connect(),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function settled(){for(let i=0;i<100;i++){if(await c.evaluate('JSON.stringify(window.pixelPals.getAvatar().root.userData.pixelPals.state)===JSON.stringify(window.pixelPals.getState())'))return;await sleep(50);}throw new Error('Character did not rebuild');}
+async function input(selector,value){await c.evaluate(`{const e=document.querySelector(${JSON.stringify(selector)});if(e.type==='checkbox')e.checked=${JSON.stringify(value)};else e.value=${JSON.stringify(value)};e.dispatchEvent(new Event('input',{bubbles:true}));e.dispatchEvent(new Event('change',{bubbles:true}));}`);await sleep(150);await settled();}
+async function click(selector){await c.evaluate(`document.querySelector(${JSON.stringify(selector)}).click()`);await sleep(160);await settled();}
+try{
+ c.events.length=0;await c.send('Emulation.setDeviceMetricsOverride',{width:1440,height:1180,deviceScaleFactor:1,mobile:false});await c.send('Page.navigate',{url:'http://127.0.0.1:4178/'});for(let i=0;i<80;i++){if(await c.evaluate('!!window.pixelPals?.getAvatar()'))break;await sleep(100);}
+ assert.equal(await c.evaluate('document.querySelectorAll("#species-grid [data-species]").length'),18);
+ await input('[data-color="bodyColor"]','#69617e');await click('[data-species="axolotl"]');
+ const colors=await c.evaluate('window.pixelPals.getAvatar().root.getObjectByName("AnimalEars").children.map(o=>o.material.color.getHexString())');assert.deepEqual(colors,Array(6).fill('69617e'));
+ await click('[data-species="puppy"]');const folded=await c.evaluate('window.pixelPals.getAvatar().root.getObjectByName("AnimalEars").children.map(o=>({color:o.material.color.getHexString(),map:!!o.material.map}))');assert.deepEqual(folded,[{color:'69617e',map:false},{color:'69617e',map:false}]);
+ for(const species of['uprightPuppy','largeLop','puppy','lop']){await click('[data-species="'+species+'"]');assert.equal(await c.evaluate('window.pixelPals.getState().species'),species);assert.equal(await c.evaluate('document.querySelector("#species-grid [aria-pressed=true]").dataset.species'),species);}
+ await click('[data-species="puppy"]');await c.evaluate(`{const p=document.querySelector('#play');if(p.getAttribute('aria-label')==='모션 일시 정지')p.click();}`);await sleep(300);
+ await c.evaluate(`window.__captureBlobs=[];const create=URL.createObjectURL.bind(URL);URL.createObjectURL=b=>{window.__captureBlobs.push(b);return create(b);};HTMLAnchorElement.prototype.click=function(){};`);
+ for(const[background,filter]of[['mood','lowpoly'],['solid','soft'],['grid','retro']]){
+  await input('[data-setting="background"]',background);await click('[data-filter="'+filter+'"]');await sleep(200);
+  await c.evaluate(`window.__captureBlobs=[];window.__beforeCapture=window.pixelPals.getRenderer().domElement.toDataURL();document.querySelector('#capture').click();`);for(let i=0;i<80;i++){if(await c.evaluate('window.__captureBlobs.length>0'))break;await sleep(50);}
+  const result=await c.evaluate(`(async()=>{const bitmap=await createImageBitmap(window.__captureBlobs[0]),canvas=document.createElement('canvas');canvas.width=bitmap.width;canvas.height=bitmap.height;const ctx=canvas.getContext('2d');ctx.drawImage(bitmap,0,0);const saved=ctx.getImageData(0,0,canvas.width,canvas.height).data;const screen=await createImageBitmap(await(await fetch(window.__beforeCapture)).blob());ctx.clearRect(0,0,canvas.width,canvas.height);ctx.imageSmoothingEnabled=window.pixelPals.getState().filter!=='retro';ctx.drawImage(screen,0,0,canvas.width,canvas.height);const original=ctx.getImageData(0,0,canvas.width,canvas.height).data;let matched=0,opaque=0,transparent=0;for(let i=0;i<saved.length;i+=4){if(saved[i+3]===0)transparent++;if(saved[i+3]===255&&original[i+3]===255&&i<saved.length*.82){opaque++;if(Math.abs(saved[i]-original[i])<3&&Math.abs(saved[i+1]-original[i+1])<3&&Math.abs(saved[i+2]-original[i+2])<3)matched++;}}return{width:bitmap.width,height:bitmap.height,corner:saved[3],transparent,opaque,match:matched/opaque};})()`);
+  assert.equal(result.corner,0,background);assert.ok(result.transparent>result.width*result.height*.3,background);assert.ok(result.opaque>500,background);assert.ok(result.match>.99,JSON.stringify({background,result}));
+ }
+ const png=await c.evaluate(`(async()=>{const bytes=new Uint8Array(await window.__captureBlobs[0].arrayBuffer());let s='';for(let i=0;i<bytes.length;i+=8192)s+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(s);})()`);await writeFile('tests/artifacts/model-only-capture.png',Buffer.from(png,'base64'));
+ await click('[data-filter="lowpoly"]');await input('[data-setting="background"]','mood');await click('#reset-character');await sleep(250);const shot=await c.send('Page.captureScreenshot',{format:'png',captureBeyondViewport:true});await writeFile('tests/artifacts/github-preview.png',Buffer.from(shot.data,'base64'));
+ assert.equal(c.events.filter(e=>e.method==='Runtime.exceptionThrown').length,0);console.log('PASS 18 selectable models, axolotl whole color, plain folded dog ears, transparent model-only PNG with >99% matching viewport colors for three backgrounds/filters');
+}finally{c.close();}

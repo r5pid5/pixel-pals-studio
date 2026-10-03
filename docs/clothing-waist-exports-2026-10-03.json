@@ -1,0 +1,24 @@
+[
+  {
+    "kind": "overalls",
+    "bytes": 2991560,
+    "meshes": 1,
+    "skins": 1,
+    "joints": 22,
+    "clothing": "overalls",
+    "vertices": 49336,
+    "allSkinned": true,
+    "projectRoundtrip": true
+  },
+  {
+    "kind": "uniform",
+    "bytes": 6490820,
+    "meshes": 1,
+    "skins": 1,
+    "joints": 22,
+    "clothing": "uniform",
+    "vertices": 104875,
+    "allSkinned": true,
+    "projectRoundtrip": true
+  }
+]

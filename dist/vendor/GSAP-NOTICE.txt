@@ -1,0 +1,4 @@
+GSAP 3.12.5
+Copyright GreenSock. Original copyright and license notice is retained in gsap.min.js.
+Official license: https://gsap.com/community/standard-license/
+Used for the studio interface entrance animation. Character animation is implemented separately in Three.js.
