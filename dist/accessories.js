@@ -1,5 +1,6 @@
 const item=(id,label,key,value=true,styleKey,styleValue)=>({id,label,key,value,styleKey,styleValue});
 export const accessoryOptions=[
+ ...[['plain','기본 생크림'],['strawberry','딸기 생크림'],['cherry','체리 생크림'],['chocolate','초콜릿 생크림']].map(([v,n])=>item('cream-'+v,n,'whippedCream',v)),
  item('sleep-cap','잠옷 모자','sleepCap'),item('space-helmet','우주 헬멧','spaceHelmet'),item('guitar','어쿠스틱 기타','guitar',true,'guitarStyle','acoustic'),item('guitar-electric','일렉기타','guitar',true,'guitarStyle','electric'),item('burger','손에 드는 햄버거','burger'),item('burger-body','몸에 끼우는 햄버거','bodyCostume','burger'),item('laptop','노트북','laptop'),item('sunglasses','선글라스','glasses',true,'glassesStyle','sunglasses'),item('earring-cuffs','귀 옆 더블 링','earrings','cuffs'),
  item('sunglasses-drop','둥근 물방울 선글라스','glasses',true,'glassesStyle','dropSunglasses'),item('glasses-tear-round','눈물 안경 · 둥근','glasses',true,'glassesStyle','tearRound'),item('glasses-tear-square','눈물 안경 · 사각','glasses',true,'glassesStyle','tearSquare'),
  item('syringe','커다란 주사기','syringe'),
@@ -13,4 +14,4 @@ export const accessoryOptions=[
 ];
 export function accessorySelected(s,a){return s[a.key]===a.value&&(!a.styleKey||s[a.styleKey]===a.styleValue);}
 export function accessoryPatch(a,enabled=true){return{[a.key]:enabled?a.value:typeof a.value==='boolean'?false:'none',...(enabled&&a.styleKey?{[a.styleKey]:a.styleValue}:{}),...(enabled&&a.key==='guitar'?{guitarColor:a.styleValue==='electric'?'#91a8af':'#bf9868'}:{}),...(enabled&&a.key==='earrings'?{earringSide:a.value==='cuffs'?'right':'both'}:{})};}
-export const clearAccessories={accessoryTransforms:{},syringe:false,clothing:'none',sleepCap:false,spaceHelmet:false,guitar:false,burger:false,laptop:false,halo:false,horns:false,glasses:false,hat:false,headset:false,wings:'none',ribbon:'none',hairClip:'none',earrings:'none',neckAccessory:'none',bodyCostume:'none',mug:false,tufts:'none'};
+export const clearAccessories={whippedCream:'none',dessertBase:'none',accessoryTransforms:{},syringe:false,clothing:'none',sleepCap:false,spaceHelmet:false,guitar:false,burger:false,laptop:false,halo:false,horns:false,glasses:false,hat:false,headset:false,wings:'none',ribbon:'none',hairClip:'none',earrings:'none',neckAccessory:'none',bodyCostume:'none',mug:false,tufts:'none'};

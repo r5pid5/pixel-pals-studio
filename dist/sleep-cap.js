@@ -5,7 +5,7 @@ const cache=new WeakMap();
 export function addSleepCap(head,s,origin,surface){
  const crown=surface.top(0,0),base=crown-origin[1],cap=new T.Group();cap.name='SleepCap';cap.position.y=base;head.add(cap);
  const fabric=wearableMaterial(s,'sleepCapColor'),rim=wearableMaterial(s,null,'#f5eddd');
- if(cache.has(surface)){for(const {geometry,trim,name,position}of cache.get(surface))solidMesh(cap,geometry.clone(),trim?rim:fabric,position,[1,1,1],name).userData.smoothAccessory=true;return;}
+ if(cache.has(surface)){for(const {geometry,trim,name,position,scale,quaternion}of cache.get(surface)){const mesh=solidMesh(cap,geometry.clone(),trim?rim:fabric,position,scale,name);mesh.quaternion.fromArray(quaternion);mesh.userData.smoothAccessory=true;}return;}
  // Cross-sections rotate with the bent cone's centerline. Horizontal rings
  // folded downward invert the tip's faces and cut back through the skull.
  // Tip droops slightly forward, away from the exposed ear roots.
@@ -30,5 +30,5 @@ export function addSleepCap(head,s,origin,surface){
  const raw=fabricShape(star,.004),embroidery=tessellateFace(raw,.014);raw.dispose();const ep=embroidery.attributes.position,triangles=[],gp=geometry.attributes.position;
  for(let j=0;j<indices.length;j+=3){const t=[0,1,2].map(k=>new T.Vector3().fromBufferAttribute(gp,indices[j+k]));if(Math.min(...t.map(p=>p.x))>.10||Math.max(...t.map(p=>p.x))<0||Math.min(...t.map(p=>p.y))>.18||Math.max(...t.map(p=>p.y))<.08)continue;triangles.push(t);}
  const hit=new T.Vector3(),front=new Map();for(let i=0;i<ep.count;i++){const x=ep.getX(i),y=ep.getY(i),key=x+'|'+y;if(!front.has(key)){const ray=new T.Ray(new T.Vector3(x,y,2),new T.Vector3(0,0,-1));let z=-Infinity;for(const tri of triangles)if(ray.intersectTriangle(...tri,false,hit))z=Math.max(z,hit.z);front.set(key,Number.isFinite(z)?z:.25);}ep.setXYZ(i,x,y,front.get(key)+.004+ep.getZ(i));}embroidery.computeVertexNormals();solidMesh(cap,embroidery,rim,[0,0,0],[1,1,1],'SleepCapEmbroidery').userData.smoothAccessory=true;
- cache.set(surface,cap.children.map(m=>({geometry:m.geometry.clone(),trim:m.material===rim,name:m.name,position:m.position.toArray()})));
+ cache.set(surface,cap.children.map(m=>({geometry:m.geometry.clone(),trim:m.material===rim,name:m.name,position:m.position.toArray(),scale:m.scale.toArray(),quaternion:m.quaternion.toArray()})));
 }

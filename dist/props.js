@@ -1,4 +1,5 @@
 import {addGuitar} from './guitar.js';
+import {addWhippedCream} from './dessert-bases.js';
 import {addSpaceHelmet} from './space-helmet.js';
 import {addSyringe} from './syringe.js';
 import {addSleepCap} from './sleep-cap.js';
@@ -6,6 +7,7 @@ import * as T from './vendor/three.module.js';
 import {wearableMaterial,solidMesh,ball,lineTube,fabricShape,roundBox} from './wearable-meshes.js';
 
 export function addProps(head,spine,bones,s,origin,surface,headGeometry){
+ if(surface&&origin)addWhippedCream(head,s,origin,surface);
  if(s.syringe)addSyringe(spine,s);
  const material=(key,color,options)=>wearableMaterial(s,key,color,options);
  const dark=material(null,'#494653'),silver=material(null,'#c0c3c7',{roughness:.45}),cream=material(null,'#f4eddf');

@@ -1,10 +1,15 @@
+import {poseIceCream,iceCreamMotionNames,resetIceCreamMotion} from './ice-cream-motion.js';
 import {poseSocial,socialMotionNames} from './social-motion.js';
-export const motionNames={float:'둥실둥실',wave:'안녕, 친구',dance:'살랑 춤',walk:'총총 걷기',spin:'빙글빙글',hop:'폴짝폴짝',bob:'고개 까딱',sway:'좌우 살랑',peek:'두리번두리번',stretch:'기지개',flutter:'파닥파닥',retro:'레트로 뚝딱',...socialMotionNames,still:'멈춰 있기'};
-export const motionSymbols={float:'☁',wave:'✋',dance:'♫',walk:'⌁',spin:'↻',hop:'⌃',bob:'◡',sway:'≈',peek:'◉',stretch:'↟',flutter:'⋈',retro:'▣',picnicDrink:'☕',picnicEat:'◉',picnicChat:'♧',readTogether:'▤',guitarPlay:'♫',laptopWork:'▰',highFive:'✋',toast:'♬',musicListen:'♪',syringeHold:'♢',still:'Ⅱ'};
+import {poseSleep,sleepMotionNames} from './sleep-motion.js';
+export const motionNames={float:'둥실둥실',wave:'안녕, 친구',dance:'살랑 춤',walk:'총총 걷기',spin:'빙글빙글',hop:'폴짝폴짝',bob:'고개 까딱',sway:'좌우 살랑',peek:'두리번두리번',stretch:'기지개',flutter:'파닥파닥',retro:'레트로 뚝딱',...socialMotionNames,...sleepMotionNames,...iceCreamMotionNames,still:'멈춰 있기'};
+export const motionSymbols={float:'☁',wave:'✋',dance:'♫',walk:'⌁',spin:'↻',hop:'⌃',bob:'◡',sway:'≈',peek:'◉',stretch:'↟',flutter:'⋈',retro:'▣',picnicDrink:'☕',picnicEat:'◉',picnicChat:'♧',readTogether:'▤',guitarPlay:'♫',laptopWork:'▰',highFive:'✋',toast:'♬',musicListen:'♪',syringeHold:'♢',sleepSprawl:'☘',sleepProne:'☾',iceCream:'🍦',still:'Ⅱ'};
 export function poseMotion(a,motion,time,speed=1){
+ if(motion!=='iceCream')resetIceCreamMotion(a);
  for(const b of a.bones){b.position.copy(b.userData.restPosition);b.quaternion.copy(b.userData.restQuaternion);}
  const b=a.bones,t=time*speed,p=t*Math.PI/3,s=Math.sin(p),c=Math.cos(p),step=Math.sin(p*2);
  poseSocial(a,motion,t);
+ if(poseSleep(a,motion,t))return;
+ if(poseIceCream(a,motion,t))return;
  if(motion==='float'){b[1].position.y+=.13+.095*s;b[1].position.x+=.025*Math.sin(p*.5);b[5].rotation.z+=.065*Math.sin(p+.35);b[7].rotation.z+=.13+.075*step;b[11].rotation.z-=.13+.075*step;b[14].rotation.x+=.07*c;b[17].rotation.x-=.07*c;}
  if(motion==='wave'){b[10].position.z+=.16;b[11].rotation.z-=1.85+.20*Math.sin(p*4);b[11].rotation.x-=.35;b[12].rotation.x-=.55;b[13].rotation.z+=.28*Math.sin(p*4+.4);b[5].rotation.z+=.08;b[1].position.y+=.018*(1-c);}
  if(motion==='dance'){b[1].position.y+=.045*(1-Math.cos(p*4));b[2].rotation.z+=.14*step;b[5].rotation.z-=.10*step;b[7].rotation.z+=.65+.35*Math.sin(p*2+.3);b[11].rotation.z-=.65+.35*Math.sin(p*2-.3);b[14].rotation.x+=.22*step;b[17].rotation.x-=.22*step;}

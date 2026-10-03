@@ -1,0 +1,4 @@
+export const creamOptions=[['none','생크림 없음'],['plain','기본 생크림'],['strawberry','딸기 생크림'],['cherry','체리 생크림'],['chocolate','초콜릿 생크림']];
+export const dessertFamilies=[['cake','케이크'],['pudding','푸딩'],['roll','롤케이크'],['castella','카스테라'],['tart','타르트']];
+const flavors={cake:[['strawberry','딸기 쇼트케이크'],['chocolate','초콜릿 가나슈 케이크'],['peach','복숭아 크림 케이크'],['blueberry','블루베리 케이크']],pudding:[['custard','캐러멜 커스터드 푸딩'],['chocolate','초콜릿 푸딩'],['strawberry','딸기 밀크 푸딩'],['matcha','말차 팥 푸딩']],roll:[['strawberry','딸기 크림 롤'],['chocolate','초콜릿 롤'],['matcha','말차 팥 롤'],['vanilla','바닐라 커스터드 롤']],castella:[['honey','꿀 카스테라'],['chocolate','초콜릿 카스테라'],['matcha','말차 카스테라'],['strawberry','딸기 샌드 카스테라']],tart:[['strawberry','딸기 타르트'],['blueberry','블루베리 타르트'],['apple','사과 타르트'],['chocolate','초콜릿 타르트']]};
+export const dessertBaseOptions=dessertFamilies.flatMap(([family])=>flavors[family].map(([flavor,label])=>({id:family+'-'+flavor,family,flavor,label})));

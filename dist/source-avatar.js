@@ -1,4 +1,5 @@
 import {armSpread} from './garment-fit.js';
+import {createDessertBase} from './dessert-bases.js';
 import * as T from './vendor/three.module.js';
 import {addClothing} from './clothing.js';
 import {addProps} from './props.js';
@@ -34,4 +35,5 @@ export function buildSourceAvatar(s){const root=new T.Group();root.name='PixelPa
  groupAccessories({root,bones},s);
  root.traverse(o=>facetMesh(o,s.filter==='lowpoly'));
  if(s.outline)addOutlines(root,s);
- bones[5].scale.setScalar(s.head);root.updateMatrixWorld(true);bones.forEach(b=>{b.userData.restPosition=b.position.clone();b.userData.restQuaternion=b.quaternion.clone();});return{root,bones,materials,face,rest:bones.map(b=>b.getWorldPosition(new T.Vector3())),headSurface:sculpt.surface,headOrigin,fromProvidedModel:true};}
+ const dessertBase=createDessertBase(s);const dessertBaseHeight=dessertBase?.userData.supportHeight??0;if(dessertBase){root.add(dessertBase);bones[0].position.y+=dessertBaseHeight;}
+ bones[5].scale.setScalar(s.head);root.updateMatrixWorld(true);bones.forEach(b=>{b.userData.restPosition=b.position.clone();b.userData.restQuaternion=b.quaternion.clone();});return{root,bones,materials,face,dessertBase,dessertBaseHeight,rest:bones.map(b=>b.getWorldPosition(new T.Vector3())),headSurface:sculpt.surface,headOrigin,fromProvidedModel:true};}

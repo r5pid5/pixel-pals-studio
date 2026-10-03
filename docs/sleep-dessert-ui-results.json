@@ -1,0 +1,42 @@
+{
+  "cap": {
+    "clothing": "spacesuit",
+    "pom": [
+      [
+        0.07,
+        0.07,
+        0.07
+      ]
+    ]
+  },
+  "gifs": [
+    {
+      "motion": "sleepSprawl",
+      "width": 540,
+      "height": 359,
+      "frames": 12,
+      "changed": 1037
+    },
+    {
+      "motion": "sleepProne",
+      "width": 540,
+      "height": 359,
+      "frames": 12,
+      "changed": 712
+    },
+    {
+      "motion": "iceCream",
+      "width": 540,
+      "height": 359,
+      "frames": 12,
+      "changed": 1622
+    }
+  ],
+  "height": 0.8342000000000002,
+  "projectRoundtrip": true,
+  "sharedGrass": {
+    "actors": 2,
+    "grass": 1
+  },
+  "exceptions": 0
+}

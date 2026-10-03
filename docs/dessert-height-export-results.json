@@ -1,0 +1,56 @@
+{
+  "exports": [
+    {
+      "dessertBase": "cake-strawberry",
+      "magic": 1179937895,
+      "version": 2,
+      "bytes": 4924044,
+      "joints": 22,
+      "expectedVertices": 80556,
+      "vertices": 80556
+    },
+    {
+      "dessertBase": "pudding-custard",
+      "magic": 1179937895,
+      "version": 2,
+      "bytes": 1681120,
+      "joints": 22,
+      "expectedVertices": 27444,
+      "vertices": 27444
+    },
+    {
+      "dessertBase": "roll-matcha",
+      "magic": 1179937895,
+      "version": 2,
+      "bytes": 2803604,
+      "joints": 22,
+      "expectedVertices": 46812,
+      "vertices": 46812
+    },
+    {
+      "dessertBase": "castella-honey",
+      "magic": 1179937895,
+      "version": 2,
+      "bytes": 1742660,
+      "joints": 22,
+      "expectedVertices": 28512,
+      "vertices": 28512
+    },
+    {
+      "dessertBase": "tart-apple",
+      "magic": 1179937895,
+      "version": 2,
+      "bytes": 4587392,
+      "joints": 22,
+      "expectedVertices": 74988,
+      "vertices": 74988
+    }
+  ],
+  "performance": {
+    "frames": 120,
+    "cpuSubmitMedianMs": 0.10000014305114746,
+    "cpuSubmitP95Ms": 0.2999999523162842,
+    "drawCalls": 19,
+    "triangles": 27548
+  }
+}

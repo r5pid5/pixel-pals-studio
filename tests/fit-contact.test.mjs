@@ -8,6 +8,28 @@ test('hands meet cup handle, book edges and syringe barrel throughout their cycl
  for(const motion of['picnicDrink','picnicEat','readTogether','toast','syringeHold','guitarPlay','laptopWork'])for(let i=0;i<=24;i++){poseAvatar(a,motion,i/4);a.root.updateMatrixWorld(true);const prop=a.root.getObjectByName('MotionProp-'+({picnicDrink:'drink',picnicEat:'kimbap',readTogether:'book',toast:'toast',syringeHold:'syringe',guitarPlay:'guitar',laptopWork:'laptop'}[motion]));assert.ok(prop?.visible,motion);for(const grip of prop.userData.grips??[]){const target=prop.localToWorld(new T.Vector3(...grip.point)),actual=handCenter(a,grip.arm),error=target.distanceTo(actual);maximum=Math.max(maximum,error);assert.ok(error<.015*scale,motion+' grip '+error.toFixed(4));}}
  disposeAvatar(a);}console.log('Maximum grip error:',maximum.toFixed(5));
 });
+
+test('pastry elevation translates social poses and prop grips without lengthening or redirecting the arms',()=>{
+ let samples=0,maximum=0;
+ for(const [scale,side,clothing]of[[1,1,'none'],[.65,-1,'hoodie']]){
+  const bare=buildAvatar({...defaults,clothing});bare.root.scale.setScalar(scale);bare.root.rotation.y=.8;bare.root.position.set(.3,.1,-.2);bare.socialSide=side;
+  for(const dessertBase of['cake-strawberry','pudding-custard','roll-strawberry','castella-strawberry','tart-strawberry'])for(const dessertBaseHeight of[.8,1.9]){
+   const a=buildAvatar({...defaults,clothing,dessertBase,dessertBaseHeight});assert.ok(a.dessertBaseHeight>.1,'active pastry support');a.root.scale.copy(bare.root.scale);a.root.rotation.copy(bare.root.rotation);a.root.position.copy(bare.root.position);a.socialSide=side;
+   const rise=new T.Vector3(0,a.dessertBaseHeight,0).applyQuaternion(a.root.quaternion).multiplyScalar(scale);
+   for(const motion of['highFive','toast','picnicDrink','picnicEat','picnicChat','readTogether','guitarPlay','laptopWork','syringeHold'])for(const t of[0,1.5,3,4.5,6]){
+    poseAvatar(bare,motion,t);poseAvatar(a,motion,t);a.root.updateMatrixWorld(true);bare.root.updateMatrixWorld(true);
+    for(const i of[7,8,9,11,12,13]){
+     const error=a.bones[i].getWorldPosition(new T.Vector3()).sub(rise).distanceTo(bare.bones[i].getWorldPosition(new T.Vector3()));maximum=Math.max(maximum,error);assert.ok(error<1e-6,motion+' on '+dessertBase+' bone '+i+' error '+error);
+     assert.ok(a.bones[i].position.distanceTo(bare.bones[i].position)<1e-6,motion+' arm length');
+    }
+    for(const index of[7,11])assert.ok(handCenter(a,index).sub(rise).distanceTo(handCenter(bare,index))<1e-6,motion+' hand center');
+    a.root.traverse(prop=>{if(!prop.visible||!prop.userData.motionProp)return;for(const grip of prop.userData.grips??[])assert.ok(handCenter(a,grip.arm).distanceTo(prop.localToWorld(new T.Vector3(...grip.point)))<.015*scale,motion+' grip');});
+    if(motion.startsWith('picnic'))assert.ok(a.root.getObjectByName('MotionProp-picnicPlate').getWorldPosition(new T.Vector3()).sub(rise).distanceTo(bare.root.getObjectByName('MotionProp-picnicPlate').getWorldPosition(new T.Vector3()))<1e-6,'picnic food follows support');
+    samples++;
+   }disposeAvatar(a);
+  }disposeAvatar(bare);
+ }console.log('Pedestal social pose samples:',samples,'maximum bone error:',maximum.toExponential(3));
+});
 test('book page normals face up toward the reader and mug body stays outside the gripping hand',()=>{
  const a=buildAvatar({...defaults});for(let i=0;i<12;i++){poseAvatar(a,'readTogether',i/2);a.root.updateMatrixWorld(true);const book=a.root.getObjectByName('MotionProp-book'),normal=new T.Vector3(0,0,1).transformDirection(book.matrixWorld),reader=a.bones[5].getWorldPosition(new T.Vector3()).sub(book.getWorldPosition(new T.Vector3())).normalize();assert.ok(normal.dot(reader)>.75,'pages must face reader');poseAvatar(a,'picnicDrink',i/2);const cup=a.root.getObjectByName('MotionProp-drink'),hand=cup.worldToLocal(handCenter(a,7));assert.ok(Math.hypot(hand.x,hand.z)-.089>.078,'hand must not cut through mug body');}disposeAvatar(a);
 });

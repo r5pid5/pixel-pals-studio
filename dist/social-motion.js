@@ -29,7 +29,7 @@ function create(a,id){
   solidMesh(g,new T.CylinderGeometry(.069,.069,.105,20),cream).rotation.x=Math.PI/2;
   for(const[x,y,color]of[[-.023,-.014,'#d4b567'],[.019,.019,'#c58e6a'],[.016,-.020,'#849266'],[-.018,.025,'#d8bb80']])ball(g,material(color),[x,y,.054],[.017,.015,.003]);
  }else if(id==='picnicPlate'){
-  a.root.add(g);g.position.set(.57,.04,.39);
+  a.bones[0].add(g);g.position.set(.57,.04,.39);
   const plate=solidMesh(g,roundBox(.33,.24,.018,.025),material('#b49b7d'));plate.rotation.x=-Math.PI/2;
   for(let i=0;i<3;i++){const roll=new T.Group();roll.position.set((i-1)*.092,.046,0);roll.rotation.x=-Math.PI/2;g.add(roll);solidMesh(roll,new T.CylinderGeometry(.041,.041,.050,16),green).rotation.x=Math.PI/2;solidMesh(roll,new T.CylinderGeometry(.033,.033,.052,16),cream).rotation.x=Math.PI/2;ball(roll,material('#d8ad67'),[.008,0,.028],[.013,.012,.002]);}
  }else if(id==='book'){
@@ -41,7 +41,7 @@ function create(a,id){
   solidMesh(g,lineTube([[0,-.14,.032],[0,.14,.032]],.003,3),dark);
  }else if(id==='guitar'||id==='laptop'||id==='syringe'){
   const name=id==='guitar'?'Guitar':id==='laptop'?'Laptop':'Syringe',before=new Set(a.bones[3].children);
-  addProps(a.bones[5],a.bones[3],a.bones,{...s,bodyCostume:'none',syringe:id==='syringe',glasses:false,sleepCap:false,spaceHelmet:false,guitar:id==='guitar',laptop:id==='laptop',burger:false},a.headOrigin,a.headSurface,a.face.geometry);
+  addProps(a.bones[5],a.bones[3],a.bones,{...s,bodyCostume:'none',whippedCream:'none',syringe:id==='syringe',glasses:false,sleepCap:false,spaceHelmet:false,guitar:id==='guitar',laptop:id==='laptop',burger:false},a.headOrigin,a.headSurface,a.face.geometry);
   const prop=a.bones[3].children.find(o=>!before.has(o)&&o.name===name);g.position.copy(prop.position);g.quaternion.copy(prop.quaternion);prop.position.set(0,0,0);prop.quaternion.identity();g.add(prop);a.bones[3].add(g);
  }else if(id==='headset'){
   const before=new Set(a.bones[5].children);addHeadset(a.bones[5],s,a.headOrigin,a.headSurface);
@@ -66,12 +66,15 @@ function aimWrist(a,index,target,bend=1){
  return wrist;
 }
 export function handCenter(a,index){const s=a.root.userData.pixelPals.state,bind=new T.Vector3((index===7?1:-1)*handBindX(s),.494+(1.54/5.2)*(s.legs-1),.03),offset=bind.applyMatrix4(a.face.skeleton.boneInverses[index+2]);return a.bones[index+2].localToWorld(offset);}
-function hand(a,index,target,bend=1){
+export function hand(a,index,target,bend=1){
  const s=a.root.userData.pixelPals.state,bind=new T.Vector3((index===7?1:-1)*handBindX(s),.494+(1.54/5.2)*(s.legs-1),.03),offset=bind.applyMatrix4(a.face.skeleton.boneInverses[index+2]),wrist=a.bones[index+2];
  for(let i=0;i<6;i++){a.root.updateMatrixWorld(true);const delta=wrist.localToWorld(offset.clone()).sub(wrist.getWorldPosition(new T.Vector3()));aimWrist(a,index,target.clone().sub(delta),bend);}
  return wrist;
 }
-function point(a,x,y,z){return a.root.localToWorld(new T.Vector3(x,y,z));}
+// Character-relative hand targets follow the rig's support elevation. The
+// outer root also contains the grounded pastry and picnic blanket, so using
+// it here would leave these targets at floor height while the shoulders rise.
+function point(a,x,y,z){return a.bones[0].localToWorld(new T.Vector3(x,y,z));}
 function hold(a,g,target,index=7,tilt=0){
  if(g.parent!==a.root)a.root.add(g);g.visible=true;g.position.copy(a.root.worldToLocal(target.clone()));g.rotation.set(tilt,index===7?0:Math.PI,0);a.root.updateMatrixWorld(true);
  const grip=new T.Vector3(g.name.includes('kimbap')?.17:.19,0,.005);g.userData.grips=[{arm:index,point:grip.toArray()}];hand(a,index,g.localToWorld(grip));

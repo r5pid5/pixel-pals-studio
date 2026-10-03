@@ -18,3 +18,17 @@ Glasses variants: preserve the original round/square model's bridge, straight te
 
 Trousers: sew both legs into one waist/crotch surface, with torso weights at the waist and leg weights towards each cuff. Overalls continue that same surface into front and back bib panels. Keep the inner shirt above the waist and trim only skin hidden by trousers, retaining the original visible feet and restoring all skin after removal. Attach pockets to actual cloth triangles. Flush pending model changes before capture/export/recording so files match the selected outfit.
 
+
+Sleeping: separate head and body support heights only in the sleeping poses. Ground both on a single circular grassy patch with short blades and small daisies. Cache fitting outside the playback loop. Temporarily close eyes while preserving saved expression settings. Share one circle in group scenes.
+
+Desserts: five families with four physically distinct fillings/toppings each. Model sponge/cream layers, curled rolls, baked crusts, fluted tart walls, piped cream, fruit seeds and stems in real geometry; batch by material. Increase the default body height to 1.50 and provide independent width/height controls. Keep the ceramic plate thin and topping heights stable. Derive character support from the actual central surface.
+
+Ice cream: the original head forms the scoop, with two original rigged paws over a raised waffle-grid cone. Temporarily render only the body arms and hide clothing inside this costume. Restore every original geometry/visibility on exit, recolor and model export. The cone is a transient filming prop.
+
+Sleep-cap cache: save full position, scale and quaternion; never replace a cached 0.07 pom-pom with a unit sphere.
+
+Sleeping neck: fit torso overlap against the actual posed head surface once per sleeping configuration, compensating the head translation independently. A fixed tuck cannot cover all head/body proportions. Preserve exact standing geometry and restore before model export.
+
+Strawberry sections: a closed half-volume, thick red outer skin, pink flesh, a broad rounded white teardrop center, tiny round seeds and a leafy crown. Increase width by 25% and reduce height by 18%. Reuse in every strawberry pastry and head cream. Filling pieces have no crown or seeds and face outward at both roll ends.
+
+Social motion support: character-relative hand targets use the rig's topmost bone coordinate frame, which follows pastry elevation. Body-mounted and mouth-mounted prop targets use that same elevation. The kimbap plate follows the rig; the blanket stays on the ground. Adding a pastry must translate the standing/seated motion without changing its arm lengths or relative hand paths.

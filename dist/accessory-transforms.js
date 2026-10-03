@@ -1,7 +1,7 @@
 import * as T from './vendor/three.module.js';
 import {applyClothingFit} from './clothing.js';
-export const accessoryKeys=['tail','hat','halo','horns','glasses','headset','wings','ribbon','hairClip','earrings','neckAccessory','bodyCostume','mug','tufts','clothing','sleepCap','spaceHelmet','guitar','burger','laptop','syringe'];
-const names={Tail:'tail',Hat:'hat',Halo:'halo',Headset:'headset',Wings:'wings',Ribbon:'ribbon',HairClip:'hairClip',Earring:'earrings',Bandana:'neckAccessory',BurgerCostume:'bodyCostume',PumpkinCostume:'bodyCostume',MugCostume:'mug',Tufts:'tufts',SleepCap:'sleepCap',SpaceHelmet:'spaceHelmet',Guitar:'guitar',Burger:'burger',Laptop:'laptop',Syringe:'syringe'};
+export const accessoryKeys=['whippedCream','tail','hat','halo','horns','glasses','headset','wings','ribbon','hairClip','earrings','neckAccessory','bodyCostume','mug','tufts','clothing','sleepCap','spaceHelmet','guitar','burger','laptop','syringe'];
+const names={WhippedCream:'whippedCream',Tail:'tail',Hat:'hat',Halo:'halo',Headset:'headset',Wings:'wings',Ribbon:'ribbon',HairClip:'hairClip',Earring:'earrings',Bandana:'neckAccessory',BurgerCostume:'bodyCostume',PumpkinCostume:'bodyCostume',MugCostume:'mug',Tufts:'tufts',SleepCap:'sleepCap',SpaceHelmet:'spaceHelmet',Guitar:'guitar',Burger:'burger',Laptop:'laptop',Syringe:'syringe'};
 const pairs=new WeakMap();
 function registerPair(group,key){
  let nodes=group.children,axis='x';
