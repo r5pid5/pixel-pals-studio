@@ -64,7 +64,10 @@ function basePose(a,motion,t,headLift=0,tuck=0){
  if(prone){
   // Face rests on a cheek, with elbows out and hands beside the pillow-like
   // head. Bent knees lift the feet slightly instead of driving them down.
-  b[5].rotation.y-=.85;b[5].rotation.z+=.045+.008*Math.sin(phase*2);
+  // A deep cheek turn drives the floppy dog's long outer ear below its
+  // cheek, forcing the whole head upward and leaving the neck disconnected.
+  const state=a.root.userData.pixelPals.state,floppyDog=state.species==='puppy'&&state.dogEars!=='upright';
+  b[5].rotation.y-=floppyDog?.18:.85;b[5].rotation.z+=.045+.008*Math.sin(phase*2);
   b[7].rotation.z+=.52;b[11].rotation.z-=.52;
   b[7].rotation.x-=.65;b[11].rotation.x-=.65;
   b[8].rotation.x-=.65;b[12].rotation.x-=.65;
@@ -76,7 +79,10 @@ function basePose(a,motion,t,headLift=0,tuck=0){
   b[14].rotation.z+=.23;b[17].rotation.z-=.23;
   b[5].rotation.z+=.010*Math.sin(phase*2);
  }
- a.root.updateMatrixWorld(true);
+ // Studio placement may have just changed the parent's transform. Refresh
+ // ancestors first, then descendants through updateMatrixWorld so attached
+ // skinned meshes also refresh their bindMatrixInverse before fitting.
+ a.root.updateWorldMatrix(true,false);a.root.updateMatrixWorld(true);
 }
 function neckTuck(a){
  // Locate the head's actual lower rim at the torso's neck-base height.

@@ -1,6 +1,8 @@
 import {createSharedBlanket} from './social-motion.js';
 import {createGrassPatch,sleepMotions,sleepFootprint} from './sleep-motion.js';
 import {motionNames} from './motions.js';
+import {clothingOptions,clothingPatch} from './clothing-options.js';
+import {updateAvatarColors} from './colors.js';
 import * as T from './vendor/three.module.js';
 import {facetMesh} from './surface.js';
 import {buildAvatar,disposeAvatar,poseAvatar} from './avatar.js';
@@ -14,7 +16,23 @@ function setEnabled(on){enabled=on;if(!on){sharedBlanket.visible=false;sharedGra
 function addActor(s,props={}){if(actors.length>=6){api.toast('한 무대에는 최대 6명의 친구를 놓을 수 있어요.');return;}const state=structuredClone(s),avatar=buildAvatar(state),group=new T.Group();group.add(avatar.root);group.visible=enabled;const actor={id:++id,state,avatar,group,x:0,z:0,angle:0,scale:.82,motion:'shared',speed:1,phase:0,...props};actors.push(actor);api.getScene().add(group);selected=actor.id;if(Object.keys(props).length)position(actor);else formation('line');syncStudio();}
 function formation(kind){const n=actors.length;actors.forEach((a,i)=>{if(kind==='line'){a.x=(i-(n-1)/2)*1.55;a.z=0;a.angle=0;}if(kind==='v'){a.x=(i-(n-1)/2)*1.5;a.z=Math.abs(i-(n-1)/2)*.55;a.angle=0;}if(kind==='picnic'){a.x=(i-(n-1)/2)*1.34;a.z=Math.abs(i-(n-1)/2)*.10;a.angle=a.x<0?18:a.x>0?-18:0;}if(kind==='circle'){const t=i/n*Math.PI*2;a.x=Math.cos(t)*Math.min(2.2,n*.45);a.z=Math.sin(t)*Math.min(1.4,n*.30);a.angle=-t*180/Math.PI-90;while(a.angle< -180)a.angle+=360;}a.x=T.MathUtils.clamp(a.x,-3,3);a.z=T.MathUtils.clamp(a.z,-2,2);position(a);});syncStudio();}
 function position(a){api?.requestRender?.();a.group.position.set(a.x,0,a.z);a.group.rotation.y=a.angle*Math.PI/180;a.group.scale.setScalar(a.scale);}
-function syncRanges(a){document.querySelectorAll('[data-actor-range]').forEach(el=>{const k=el.dataset.actorRange;el.value=a[k];el.style.setProperty('--fill',`${(el.value-el.min)/(el.max-el.min)*100}%`);$(`#actor-${k}-value`).textContent=a[k].toFixed(k==='angle'?0:2);});}
+function syncRanges(a){syncActorClothing();document.querySelectorAll('[data-actor-range]').forEach(el=>{const k=el.dataset.actorRange;el.value=a[k];el.style.setProperty('--fill',`${(el.value-el.min)/(el.max-el.min)*100}%`);$(`#actor-${k}-value`).textContent=a[k].toFixed(k==='angle'?0:2);});}
+function syncActorClothing(){
+ if(!$('#actor-clothing')){
+  $('#actor-settings h3').textContent='선택한 친구';
+  $('#actor-motion').addEventListener('change',()=>{api.sampleCurrentPose?.();api.requestRender();});
+  $('#actor-name').closest('label').insertAdjacentHTML('afterend','<label class="advanced-field"><span>이 친구의 옷</span><select id="actor-clothing">'+clothingOptions.map(([id,label])=>'<option value="'+id+'">'+label+'</option>').join('')+'</select></label><div id="actor-clothing-colors">'+[['clothingColor','옷 기본색'],['clothingSecondaryColor','옷 배색'],['clothingTrimColor','옷 포인트 색']].map(([key,label])=>'<label class="advanced-field"><span>'+label+'</span><input type="color" data-actor-clothing-color="'+key+'" aria-label="선택한 친구의 '+label+'"></label>').join('')+'</div>');
+  $('#actor-clothing').addEventListener('change',e=>{
+   const actor=actors.find(a=>a.id===selected);if(!actor||!clothingOptions.some(([id])=>id===e.target.value))return;
+   const state={...actor.state,...clothingPatch(e.target.value)},avatar=buildAvatar(state),previous=actor.avatar;
+   actor.group.add(avatar.root);actor.group.remove(previous.root);actor.state=state;actor.avatar=avatar;disposeAvatar(previous);api.sampleCurrentPose?.();syncActorClothing();api.requestRender();
+  });
+  document.querySelectorAll('[data-actor-clothing-color]').forEach(input=>input.addEventListener('input',e=>{
+   const actor=actors.find(a=>a.id===selected);if(!actor)return;const key=e.target.dataset.actorClothingColor;actor.state={...actor.state,[key]:e.target.value};updateAvatarColors(actor.avatar,actor.state,[key]);api.sampleCurrentPose?.();api.requestRender();
+  }));
+ }
+ const actor=actors.find(a=>a.id===selected);if(!actor)return;$('#actor-clothing').value=actor.state.clothing;$('#actor-clothing-colors').hidden=actor.state.clothing==='none';document.querySelectorAll('[data-actor-clothing-color]').forEach(input=>input.value=actor.state[input.dataset.actorClothingColor]);
+}
 function syncStudio(){if(!api)return;api.requestRender?.();$('#studio-enabled').checked=enabled;$('#studio-count').textContent=`${actors.length} / 6`;$('#studio-actors').innerHTML=actors.length?actors.map(a=>`<div class="actor-card ${a.id===selected?'selected':''}"><button data-actor-id="${a.id}"><span>✦</span><span class="actor-name-text"></span></button><button data-remove-actor="${a.id}" aria-label="무대에서 친구 빼기">×</button></div>`).join(''):'<p class="panel-note">친구를 추가해서 무대를 채워보세요.</p>';$('#studio-actors').querySelectorAll('.actor-name-text').forEach((el,i)=>el.textContent=actors[i].state.name);const a=actors.find(x=>x.id===selected);$('#actor-settings').hidden=!a;if(a){$('#actor-name').value=a.state.name;$('#actor-motion').value=a.motion;syncRanges(a);}$('#studio-add-current').disabled=actors.length>=6;$('#studio-import').disabled=actors.length>=6;$('#studio-record').disabled=!enabled||actors.length===0;}
 export function updateStudio(t,external,applyFBX,sharedState){
  if(!api)return;

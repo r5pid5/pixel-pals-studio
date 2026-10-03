@@ -32,3 +32,7 @@ Sleeping neck: fit torso overlap against the actual posed head surface once per 
 Strawberry sections: a closed half-volume, thick red outer skin, pink flesh, a broad rounded white teardrop center, tiny round seeds and a leafy crown. Increase width by 25% and reduce height by 18%. Reuse in every strawberry pastry and head cream. Filling pieces have no crown or seeds and face outward at both roll ends.
 
 Social motion support: character-relative hand targets use the rig's topmost bone coordinate frame, which follows pastry elevation. Body-mounted and mouth-mounted prop targets use that same elevation. The kimbap plate follows the rig; the blanket stays on the ground. Adding a pastry must translate the standing/seated motion without changing its arm lengths or relative hand paths.
+
+Studio sleep fitting: refresh ancestor transforms before recursively updating bones and attached skinned-mesh bind inverses. Fitting in local coordinates must be independent of initial parent placement, scale and yaw. Use a gentle prone cheek turn for floppy dogs so their long ears do not prop the skull above the neck.
+
+Studio clothing: offer the same 18 clothes and none directly in the selected friend's controls, plus three fabric colors. Rebuild only that actor when changing style; immediately sample the current motion before rendering. Preserve actor placement, direction, scale, speed, current time and other friends. Update materials for colors, dispose replaced geometry/textures and serialize actor state through the existing project snapshot.
