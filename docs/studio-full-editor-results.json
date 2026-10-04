@@ -1,0 +1,40 @@
+{
+  "normalEditor": true,
+  "accessoryColorsAndTransforms": {
+    "colors": [
+      "a14f78",
+      "a14f78",
+      "a14f78",
+      "a14f78",
+      "a14f78"
+    ],
+    "glassesHeight": 0.12,
+    "glassesScale": 1.08,
+    "clothing": "cardigan"
+  },
+  "appearance": [
+    "clothing",
+    "accessories",
+    "name",
+    "expression",
+    "mouth",
+    "body proportions"
+  ],
+  "selectedFriendOnly": true,
+  "preservePlacementAndMotion": true,
+  "perFriendUndoRedo": true,
+  "queuedRebuildIsolation": true,
+  "mainCharacterPreserved": true,
+  "projectRoundtrip": true,
+  "selectedFriendExports": {
+    "glb": "밤이 꾸미기",
+    "pmx": "밤이 꾸미기",
+    "preservePose": true
+  },
+  "removeSelectionSafe": true,
+  "selectingOpensPreview": true,
+  "clearAccessoriesUndo": true,
+  "sharedSceneSettings": true,
+  "mobileWidth": 390,
+  "exceptions": 0
+}

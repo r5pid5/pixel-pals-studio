@@ -39,3 +39,10 @@ main{max-width:1660px;padding:30px 36px 0}.intro{margin-bottom:27px}.intro .eyeb
 .stage[data-background=image] .stage-grid,.stage[data-background=image] .scene-decoration{display:none}.background-photo-controls{margin:12px 0}.background-photo-current{display:flex;align-items:center;gap:9px;margin-top:10px;padding:8px;border:1px solid var(--line);border-radius:8px}.background-photo-current img{width:52px;height:42px;object-fit:cover;border-radius:4px}.background-photo-current span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;font-size:11px;white-space:nowrap}.background-photo-current button{font-size:21px;padding:5px 8px}
 
 .stage[data-camera-mode=pan] #viewport{cursor:grab}.stage[data-camera-mode=pan] #viewport:active{cursor:grabbing}
+.editing-target{margin:0 20px 12px;padding:12px 14px;border:1px solid #d9caba;border-radius:12px;background:#f6eee5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;color:#665447}
+.editing-target[hidden]{display:none}
+.editing-target strong{display:block;font-size:13px;overflow-wrap:anywhere}
+.editing-target p{margin:5px 0 0;font-size:11px;line-height:1.5}
+.editing-target-actions{display:flex;flex-wrap:wrap;gap:12px}
+.editing-target-actions .text-button{font-size:11px;margin:0;padding:4px 0}
+#actor-customize{margin-bottom:16px}

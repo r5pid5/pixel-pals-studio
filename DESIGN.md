@@ -1,5 +1,7 @@
 # Pixel Pals Studio direction
 
+Studio editing: selecting a visible studio friend binds the existing character and accessory editor to that actor. Keep its transform, motion, speed and phase, every other actor, and the main character independent. Show the active friend's name above the tabs. Keep colors and accessory transforms live; coalesce geometry rebuilds by actor identity so changing selection cannot redirect an unfinished edit. Undo/redo belongs to each editing target. Background, filtering and shared playback remain scene settings. Export the selected model from a detached temporary avatar so the visible pose and studio transforms are not baked or reset. Returning to the main editor shows the main character and retains the studio arrangement.
+
 The editor is a quiet working surface for a substantial, editable 3D character. Use a warm off-white framed workspace, charcoal typography, and a single terracotta action accent. The character is the focal asset, not a decorative background.
 
 Desktop sequence: compact masthead, clear Korean title and short purpose, large 3D preview beside a fixed-width control panel, playback strip and compact atmosphere selector, understated footer. Mobile keeps the preview first, then a full-width control panel. Preserve every editor and export action.

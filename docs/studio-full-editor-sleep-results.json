@@ -1,0 +1,95 @@
+{
+  "options": 19,
+  "necks": [
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "pajamas",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "hoodieUp",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "spacesuit",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "varsity",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "모찌",
+      "clothing": "none",
+      "covered": true
+    },
+    {
+      "name": "밤이",
+      "clothing": "pajamas",
+      "covered": true
+    }
+  ],
+  "selectedColor": [
+    "7dabac",
+    "7dabac",
+    "7dabac",
+    "7dabac",
+    "7ba9aa",
+    "75a0a1",
+    "7ba9aa",
+    "75a0a1"
+  ],
+  "projectRoundtrip": true,
+  "selectedFriendOnly": true,
+  "preservePlacementAndMotion": true,
+  "gif": {
+    "width": 540,
+    "height": 359,
+    "frames": 12,
+    "changed": 1840
+  },
+  "exceptions": 0
+}
